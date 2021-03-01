@@ -9,7 +9,7 @@ env:
 jobs:
   macos-build:
     runs-on: mary_runner
-    name: 🍎 macOS 11.0
+    name: 🍎 macOS 11.0 (ARM64)
     steps:
 
     - name: 🧰 Checkout
@@ -20,7 +20,7 @@ jobs:
 
     - name: ⬇️ Install dependencies
       run: |
-        brew bundle --no-lock --file dist/Brewfile
+        arch -arm64 brew bundle --no-lock --file dist/Brewfile
 
     - name: ✋ Build
       run: |
@@ -29,12 +29,12 @@ jobs:
         CC=$(brew --prefix llvm)/bin/clang \
         CXX=$(brew --prefix llvm)/bin/clang++ \
         PKG_CONFIG_PATH="$(brew --prefix openssl)/lib/pkgconfig":"$(brew --prefix)/lib/pkgconfig" \
-        cmake \
+        arch -arm64 cmake \
           -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
           -DCREATE_BUNDLE=ON \
           -DCREATE_PACKAGE=ON \
           ..
-        make -j 4 package
+        arch -arm64 make -j 4 package
 
     - name: 📦 Upload DMG
       uses: actions/upload-artifact@v2
