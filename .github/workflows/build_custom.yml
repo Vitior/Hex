@@ -8,7 +8,7 @@ env:
 
 jobs:
   macos-build:
-    runs-on: misaka
+    runs-on: mary_runner
     name: 🍎 macOS 11.0
     steps:
 
