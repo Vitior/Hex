@@ -184,32 +184,6 @@ namespace hex {
 
     }
 
-    void openFileBrowser(const std::string &title, DialogMode mode, const std::vector<nfdfilteritem_t> &validExtensions, const std::function<void(std::string)> &callback, const std::string &defaultPath) {
-        NFD::Init();
-
-        nfdchar_t *outPath;
-        nfdresult_t result;
-        switch (mode) {
-            case DialogMode::Open:
-                result = NFD::OpenDialog(outPath, validExtensions.data(), validExtensions.size(), defaultPath.c_str());
-                break;
-            case DialogMode::Save:
-                result = NFD::SaveDialog(outPath, validExtensions.data(), validExtensions.size(), defaultPath.c_str());
-                break;
-            case DialogMode::Folder:
-                result = NFD::PickFolder(outPath, defaultPath.c_str());
-                break;
-            default: __builtin_unreachable();
-        }
-
-        if (result == NFD_OKAY) {
-            callback(outPath);
-            NFD::FreePath(outPath);
-        }
-
-        NFD::Quit();
-    }
-
     float float16ToFloat32(u16 float16) {
         u32 sign = float16 >> 15;
         u32 exponent = (float16 >> 10) & 0x1F;

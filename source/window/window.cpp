@@ -48,8 +48,8 @@ namespace hex {
 
     void ImHexSettingsHandler_ReadLine(ImGuiContext*, ImGuiSettingsHandler *handler, void *, const char* line) {
         for (auto &view : ContentRegistry::Views::getEntries()) {
-            std::string format = std::string(view->getUnlocalizedName()) + "=%d";
-            sscanf(line, format.c_str(), &view->getWindowOpenState());
+            //std::string format = std::string(view->getUnlocalizedName()) + "=%d";
+            //sscanf(line, format.c_str(), &view->getWindowOpenState());
         }
     }
 

@@ -15,7 +15,7 @@ set(PLUGINS
         builtin
         windows
         # example_cpp
-        # example_rust
+        example_rust
         )
 
 findLibraries()

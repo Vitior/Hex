@@ -16,8 +16,6 @@
 #include <type_traits>
 #include <vector>
 
-#include <nfd.hpp>
-
 #define TOKEN_CONCAT_IMPL(x, y) x ## y
 #define TOKEN_CONCAT(x, y) TOKEN_CONCAT_IMPL(x, y)
 #define ANONYMOUS_VARIABLE(prefix) TOKEN_CONCAT(prefix, __COUNTER__)
@@ -40,7 +38,7 @@ namespace hex {
         return (value & mask) >> to;
     }
 
-    [[nodiscard]] inline u64 extract(u32 from, u32 to, const std::vector<u8> &bytes) {
+    [[nodiscard]] inline u64 extract(s32 from, s32 to, const std::vector<u8> &bytes) {
         u8 index = 0;
         while(from > 32 && to > 32) {
             if (from - 8 < 0 || to - 8 < 0)
@@ -202,14 +200,6 @@ namespace hex {
         trimLeft(s);
         trimRight(s);
     }
-
-    enum class DialogMode {
-        Open,
-        Save,
-        Folder
-    };
-
-    void openFileBrowser(const std::string &title, DialogMode mode, const std::vector<nfdfilteritem_t> &validExtensions, const std::function<void(std::string)> &callback, const std::string &defaultPath = {});
 
     float float16ToFloat32(u16 float16);
 

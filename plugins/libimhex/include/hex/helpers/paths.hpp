@@ -1,7 +1,10 @@
 #pragma once
 
+#include <functional>
 #include <string>
 #include <vector>
+
+#include <nfd.hpp>
 
 namespace hex {
 
@@ -18,5 +21,13 @@ namespace hex {
     };
 
     std::vector<std::string> getPath(ImHexPath path);
+
+    enum class DialogMode {
+        Open,
+        Save,
+        Folder
+    };
+
+    void openFileBrowser(const std::string &title, DialogMode mode, const std::vector<nfdfilteritem_t> &validExtensions, const std::function<void(std::string)> &callback, const std::string &defaultPath = {});
 
 }

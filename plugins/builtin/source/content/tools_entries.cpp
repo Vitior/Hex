@@ -4,6 +4,7 @@
 #include <hex/helpers/net.hpp>
 #include <hex/helpers/shared_data.hpp>
 #include <hex/helpers/utils.hpp>
+#include <hex/helpers/paths.hpp>
 #include <hex/helpers/fmt.hpp>
 #include <hex/helpers/file.hpp>
 #include <hex/helpers/literals.hpp>

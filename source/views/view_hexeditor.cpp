@@ -5,6 +5,7 @@
 #include <hex/helpers/crypto.hpp>
 #include <hex/helpers/file.hpp>
 #include <hex/pattern_language/pattern_data.hpp>
+#include <hex/helpers/paths.hpp>
 
 #include "providers/file_provider.hpp"
 #include "helpers/patches.hpp"
