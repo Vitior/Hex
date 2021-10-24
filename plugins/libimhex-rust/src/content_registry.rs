@@ -25,38 +25,38 @@ pub mod ffi {
     }
 }
 
-fn drawContent() {
+extern "C" fn drawContent() {
     println!("Rust Draw Content!");
 }
 
-fn placeholder() {
+extern "C" fn placeholder() {
     println!("Rust Placeholder!");
 }
 
-fn hasViewMenuItemEntry() -> bool{
+extern "C" fn hasViewMenuItemEntry() -> bool{
     println!("Rust hasViewMenuItemEntry");
     return true;
 }
 
 impl ffi::ContentRegistry::Views::View {
-    pub fn new() -> Self {
+    pub fn new() -> Box<Self> {
         unsafe {
-            let mut view = ffi::ContentRegistry::Views::View {
+            let mut view : Box<Self> = Box::new( Self {
                 vpointer: ptr::null_mut(),
                 vtable: [ptr::null_mut(), ptr::null_mut(), ptr::null_mut(), ptr::null_mut(), ptr::null_mut(), ptr::null_mut(), ptr::null_mut(), ptr::null_mut(), ptr::null_mut(), ptr::null_mut()]
-            };
+            });
 
             view.vpointer = view.vtable.as_mut_ptr();
-            view.vtable[0] = std::mem::transmute(placeholder as fn()); // ~View
-            view.vtable[1] = std::mem::transmute(drawContent as fn()); // drawContent
-            view.vtable[2] = std::mem::transmute(placeholder as fn()); // drawAlwaysVisible
-            view.vtable[3] = std::mem::transmute(placeholder as fn()); // drawMenu
-            view.vtable[4] = std::mem::transmute(placeholder as fn()); // handleShortcut
-            view.vtable[5] = std::mem::transmute(placeholder as fn()); // isAvailable
-            view.vtable[6] = std::mem::transmute(placeholder as fn()); // shouldProcess
-            view.vtable[7] = std::mem::transmute(hasViewMenuItemEntry as fn() -> bool); // hasViewMenuItemEntry
-            view.vtable[8] = std::mem::transmute(placeholder as fn()); // getMinSize
-            view.vtable[9] = std::mem::transmute(placeholder as fn()); // getMaxSize
+            view.vtable[0] = std::mem::transmute(placeholder as extern "C" fn()); // ~View
+            view.vtable[1] = std::mem::transmute(drawContent as extern "C" fn()); // drawContent
+            view.vtable[2] = std::mem::transmute(placeholder as extern "C" fn()); // drawAlwaysVisible
+            view.vtable[3] = std::mem::transmute(placeholder as extern "C" fn()); // drawMenu
+            view.vtable[4] = std::mem::transmute(placeholder as extern "C" fn()); // handleShortcut
+            view.vtable[5] = std::mem::transmute(placeholder as extern "C" fn()); // isAvailable
+            view.vtable[6] = std::mem::transmute(placeholder as extern "C" fn()); // shouldProcess
+            view.vtable[7] = std::mem::transmute(hasViewMenuItemEntry as extern "C" fn() -> bool); // hasViewMenuItemEntry
+            view.vtable[8] = std::mem::transmute(placeholder as extern "C" fn()); // getMinSize
+            view.vtable[9] = std::mem::transmute(placeholder as extern "C" fn()); // getMaxSize
 
             view
         }
