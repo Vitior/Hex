@@ -11,8 +11,8 @@ use crate::clipboard::{ClipboardBackend, ClipboardContext};
 use crate::fonts::atlas::{FontAtlas, FontAtlasRefMut, FontId, SharedFontAtlas};
 use crate::io::Io;
 use crate::style::Style;
-use crate::sys;
 use crate::Ui;
+use crate::{sys, SameFrameUi};
 
 /// An imgui-rs context.
 ///
@@ -578,6 +578,29 @@ impl Context {
             font_atlas,
             buffer: crate::UiBuffer::new(1024).into(),
         }
+    }
+
+    /// Reuses the existing frame and returns an `Ui` instance for constructing a user interface.
+    pub fn same_frame(&mut self) -> SameFrameUi<'_> {
+        // Clear default font if it no longer exists. This could be an error in the future
+        let default_font = self.io().font_default;
+        if !default_font.is_null() && self.fonts().get_font(FontId(default_font)).is_none() {
+            self.io_mut().font_default = ptr::null_mut();
+        }
+        // NewFrame/Render/EndFrame mutate the font atlas so we need exclusive access to it
+        let font_atlas = self
+            .shared_font_atlas
+            .as_ref()
+            .map(|font_atlas| font_atlas.borrow_mut());
+        // TODO: precondition checks
+        unsafe {
+            sys::igNewFrame();
+        }
+        SameFrameUi(ManuallyDrop::new(Ui {
+            ctx: self,
+            font_atlas,
+            buffer: crate::UiBuffer::new(1024).into(),
+        }))
     }
 
     pub fn current_ui(&mut self) -> Ui<'_> {

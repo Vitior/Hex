@@ -127,6 +127,23 @@ pub struct Ui<'ui> {
     buffer: cell::UnsafeCell<string::UiBuffer>,
 }
 
+#[derive(Debug)]
+pub struct SameFrameUi<'ui>(core::mem::ManuallyDrop<Ui<'ui>>);
+
+impl<'ui> core::ops::Deref for SameFrameUi<'ui> {
+    type Target = Ui<'ui>;
+
+    fn deref(&self) -> &Self::Target {
+        &*self.0
+    }
+}
+
+impl<'ui> core::ops::DerefMut for SameFrameUi<'ui> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut *self.0
+    }
+}
+
 impl<'ui> Ui<'ui> {
     /// Internal method to push a single text to our scratch buffer.
     fn scratch_txt(&self, txt: impl AsRef<str>) -> *const sys::cty::c_char {
