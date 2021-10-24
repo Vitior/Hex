@@ -1,4 +1,5 @@
-use std::ptr;
+use cxx::CxxString;
+use imgui::sys::ImVec2;
 
 pub mod ffi {
 
@@ -9,8 +10,7 @@ pub mod ffi {
 
             #[namespace = "hex"]
             pub struct View {
-                pub vpointer: * mut * mut u8,
-                pub vtable: [* mut u8; 10]
+                x: u8
             }
 
             #[namespace = "hex::ContentRegistry::Views"]
@@ -18,6 +18,14 @@ pub mod ffi {
                 include!("hex/api/content_registry.hpp");
 
                 pub unsafe fn add(view: * mut View);
+                pub unsafe fn createRustView(unlocalizedName: &CxxString,
+                                             destructorFunc: fn(),
+                                             drawContentFunc: fn(),
+                                             drawAlwaysVisibleFunc: fn(),
+                                             drawMenuFunc: fn(),
+                                             isAvailableFunc: fn() -> bool,
+                                             shouldProcessFunc: fn() -> bool,
+                                             hasViewMenuItemEntryFunc: fn() -> bool) -> * mut View;
             }
 
         }
@@ -25,48 +33,32 @@ pub mod ffi {
     }
 }
 
-extern "C" fn drawContent() {
-    println!("Rust Draw Content!");
-}
-
-extern "C" fn placeholder() {
-    println!("Rust Placeholder!");
-}
-
-extern "C" fn hasViewMenuItemEntry() -> bool{
-    println!("Rust hasViewMenuItemEntry");
-    return true;
-}
-
 impl ffi::ContentRegistry::Views::View {
-    pub fn new() -> Box<Self> {
+    pub fn new(unlocalized_name: &str,
+               destructorFunc: fn(),
+               drawContentFunc: fn(),
+               drawAlwaysVisibleFunc: fn(),
+               drawMenuFunc: fn(),
+               isAvailableFunc: fn() -> bool,
+               shouldProcessFunc: fn() -> bool,
+               hasViewMenuItemEntryFunc: fn() -> bool) -> * mut Self {
         unsafe {
-            let mut view : Box<Self> = Box::new( Self {
-                vpointer: ptr::null_mut(),
-                vtable: [ptr::null_mut(), ptr::null_mut(), ptr::null_mut(), ptr::null_mut(), ptr::null_mut(), ptr::null_mut(), ptr::null_mut(), ptr::null_mut(), ptr::null_mut(), ptr::null_mut()]
-            });
-
-            view.vpointer = view.vtable.as_mut_ptr();
-            view.vtable[0] = std::mem::transmute(placeholder as extern "C" fn()); // ~View
-            view.vtable[1] = std::mem::transmute(drawContent as extern "C" fn()); // drawContent
-            view.vtable[2] = std::mem::transmute(placeholder as extern "C" fn()); // drawAlwaysVisible
-            view.vtable[3] = std::mem::transmute(placeholder as extern "C" fn()); // drawMenu
-            view.vtable[4] = std::mem::transmute(placeholder as extern "C" fn()); // handleShortcut
-            view.vtable[5] = std::mem::transmute(placeholder as extern "C" fn()); // isAvailable
-            view.vtable[6] = std::mem::transmute(placeholder as extern "C" fn()); // shouldProcess
-            view.vtable[7] = std::mem::transmute(hasViewMenuItemEntry as extern "C" fn() -> bool); // hasViewMenuItemEntry
-            view.vtable[8] = std::mem::transmute(placeholder as extern "C" fn()); // getMinSize
-            view.vtable[9] = std::mem::transmute(placeholder as extern "C" fn()); // getMaxSize
-
-            view
+            cxx::let_cxx_string!(cpp_name = unlocalized_name);
+            crate::content_registry::ffi::ContentRegistry::Views::createRustView(&cpp_name,
+                                                                                 destructorFunc,
+                                                                                 drawContentFunc,
+                                                                                 drawAlwaysVisibleFunc,
+                                                                                 drawMenuFunc,
+                                                                                 isAvailableFunc,
+                                                                                 shouldProcessFunc,
+                                                                                 hasViewMenuItemEntryFunc)
         }
-
     }
 }
 
 pub mod ContentRegistry {
     pub mod Views {
-        pub fn add(view: & mut crate::content_registry::ffi::ContentRegistry::Views::View) {
+        pub fn add(view: * mut crate::content_registry::ffi::ContentRegistry::Views::View) {
             unsafe {
                 crate::content_registry::ffi::ContentRegistry::Views::add(view as *mut _);
             }

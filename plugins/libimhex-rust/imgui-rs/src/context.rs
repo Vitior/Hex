@@ -579,4 +579,22 @@ impl Context {
             buffer: crate::UiBuffer::new(1024).into(),
         }
     }
+
+    pub fn current_ui(&mut self) -> Ui<'_> {
+        // Clear default font if it no longer exists. This could be an error in the future
+        let default_font = self.io().font_default;
+        if !default_font.is_null() && self.fonts().get_font(FontId(default_font)).is_none() {
+            self.io_mut().font_default = ptr::null_mut();
+        }
+        // NewFrame/Render/EndFrame mutate the font atlas so we need exclusive access to it
+        let font_atlas = self
+            .shared_font_atlas
+            .as_ref()
+            .map(|font_atlas| font_atlas.borrow_mut());
+        Ui {
+            ctx: self,
+            font_atlas,
+            buffer: crate::UiBuffer::new(1024).into(),
+        }
+    }
 }

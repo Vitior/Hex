@@ -3,6 +3,8 @@
 #include <hex/helpers/shared_data.hpp>
 #include <hex/helpers/paths.hpp>
 
+#include <hex/views/view_rust.hpp>
+
 #include <filesystem>
 #include <fstream>
 
@@ -186,6 +188,25 @@ namespace hex {
 
     void ContentRegistry::Views::add(View *view) {
         getEntries().emplace_back(view);
+    }
+
+    View* ContentRegistry::Views::createRustView(const std::string &unlocalizedName,
+                                                 rust::ViewRustSimpleFunc destructorFunc,
+                                                 rust::ViewRustSimpleFunc drawContentFunc,
+                                                 rust::ViewRustSimpleFunc drawAlwaysVisibleFunc,
+                                                 rust::ViewRustSimpleFunc drawMenuFunc,
+                                                 rust::ViewRustBoolFunc isAvailableFunc,
+                                                 rust::ViewRustBoolFunc shouldProcessFunc,
+                                                 rust::ViewRustBoolFunc hasViewMenuItemEntryFunc) {
+        return new rust::ViewRustWrapper(unlocalizedName, {
+            destructorFunc,
+            drawContentFunc,
+            drawAlwaysVisibleFunc,
+            drawMenuFunc,
+            isAvailableFunc,
+            shouldProcessFunc,
+            hasViewMenuItemEntryFunc
+        });
     }
 
     std::vector<View*>& ContentRegistry::Views::getEntries() {
