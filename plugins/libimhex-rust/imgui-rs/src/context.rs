@@ -592,10 +592,6 @@ impl Context {
             .shared_font_atlas
             .as_ref()
             .map(|font_atlas| font_atlas.borrow_mut());
-        // TODO: precondition checks
-        unsafe {
-            sys::igNewFrame();
-        }
         SameFrameUi(ManuallyDrop::new(Ui {
             ctx: self,
             font_atlas,
