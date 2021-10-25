@@ -192,7 +192,7 @@ namespace hex {
 
     View* ContentRegistry::Views::createRustView(const std::string &unlocalizedName,
                                                  rust::ViewRustSimpleFunc destructorFunc,
-                                                 rust::ViewRustSimpleFunc drawContentFunc,
+                                                 rust::ViewRustContentDrawFunc drawContentFunc,
                                                  rust::ViewRustSimpleFunc drawAlwaysVisibleFunc,
                                                  rust::ViewRustSimpleFunc drawMenuFunc,
                                                  rust::ViewRustBoolFunc isAvailableFunc,

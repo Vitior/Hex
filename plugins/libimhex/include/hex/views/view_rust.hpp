@@ -14,12 +14,13 @@ namespace hex::rust {
 
     using ViewRustSimpleFunc = ::rust::Fn<void()>;
     using ViewRustBoolFunc = ::rust::Fn<bool()>;
+    using ViewRustContentDrawFunc = ::rust::Fn<void(bool&)>;
     using ViewRustShortcutFunc = ::rust::Fn<bool(bool[512], bool, bool, bool)>;
     using ViewRustVecFunc = ::rust::Fn<ImVec2()>;
 
     struct ViewRustFunctions {
         ViewRustSimpleFunc destructorFunc;
-        ViewRustSimpleFunc drawContentFunc;
+        ViewRustContentDrawFunc drawContentFunc;
         ViewRustSimpleFunc drawAlwaysVisibleFunc;
         ViewRustSimpleFunc drawMenuFunc;
         ViewRustBoolFunc isAvailableFunc;
@@ -37,7 +38,7 @@ namespace hex::rust {
         }
 
         void drawContent() override {
-            this->m_funcs.drawContentFunc();
+            this->m_funcs.drawContentFunc(this->getWindowOpenState());
         }
 
         void drawAlwaysVisible() override {

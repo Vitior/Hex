@@ -20,7 +20,7 @@ pub mod ffi {
                 pub unsafe fn add(view: * mut View);
                 pub unsafe fn createRustView(unlocalizedName: &CxxString,
                                              destructorFunc: fn(),
-                                             drawContentFunc: fn(),
+                                             drawContentFunc: fn(& mut bool),
                                              drawAlwaysVisibleFunc: fn(),
                                              drawMenuFunc: fn(),
                                              isAvailableFunc: fn() -> bool,
@@ -36,7 +36,7 @@ pub mod ffi {
 impl ffi::ContentRegistry::Views::View {
     pub fn new(unlocalized_name: &str,
                destructorFunc: fn(),
-               drawContentFunc: fn(),
+               drawContentFunc: fn(& mut bool),
                drawAlwaysVisibleFunc: fn(),
                drawMenuFunc: fn(),
                isAvailableFunc: fn() -> bool,

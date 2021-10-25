@@ -212,18 +212,6 @@ impl<'ui> Ui<'ui> {
         }
     }
 }
-
-impl<'a> Drop for Ui<'a> {
-    #[doc(alias = "EndFrame")]
-    fn drop(&mut self) {
-        if !thread::panicking() {
-            unsafe {
-                sys::igEndFrame();
-            }
-        }
-    }
-}
-
 /// # Demo, debug, information
 impl<'ui> Ui<'ui> {
     /// Renders a demo window (previously called a test window), which demonstrates most

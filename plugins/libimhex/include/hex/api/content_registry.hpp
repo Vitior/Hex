@@ -22,6 +22,7 @@ namespace hex {
     namespace rust {
         using ViewRustSimpleFunc = ::rust::Fn<void()>;
         using ViewRustBoolFunc = ::rust::Fn<bool()>;
+        using ViewRustContentDrawFunc = ::rust::Fn<void(bool&)>;
         using ViewRustShortcutFunc = ::rust::Fn<bool(bool[512], bool, bool, bool)>;
         using ViewRustVecFunc = ::rust::Fn<ImVec2()>;
     }
@@ -119,7 +120,7 @@ namespace hex {
 
             View* createRustView(const std::string &unlocalizedName,
                                  rust::ViewRustSimpleFunc destructorFunc,
-                                 rust::ViewRustSimpleFunc drawContentFunc,
+                                 rust::ViewRustContentDrawFunc drawContentFunc,
                                  rust::ViewRustSimpleFunc drawAlwaysVisibleFunc,
                                  rust::ViewRustSimpleFunc drawMenuFunc,
                                  rust::ViewRustBoolFunc isAvailableFunc,
