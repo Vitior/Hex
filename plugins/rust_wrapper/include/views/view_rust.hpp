@@ -3,6 +3,7 @@
 #include <hex.hpp>
 
 #include <hex/views/view.hpp>
+#include <hex/helpers/logger.hpp>
 
 #include <imgui.h>
 
@@ -15,16 +16,27 @@ namespace hex::rust {
     using ViewRustSimpleFunc = ::rust::Fn<void()>;
     using ViewRustBoolFunc = ::rust::Fn<bool()>;
     using ViewRustContentDrawFunc = ::rust::Fn<void(bool&)>;
-    using ViewRustShortcutFunc = ::rust::Fn<bool(bool[512], bool, bool, bool)>;
-    using ViewRustVecFunc = ::rust::Fn<ImVec2()>;
 
     struct ViewRustFunctions {
+        bool destructorValid;
         ViewRustSimpleFunc destructorFunc;
+
+        bool drawContentValid;
         ViewRustContentDrawFunc drawContentFunc;
+
+        bool drawAlwaysVisibleValid;
         ViewRustSimpleFunc drawAlwaysVisibleFunc;
+
+        bool drawMenuValid;
         ViewRustSimpleFunc drawMenuFunc;
+
+        bool isAvailableValid;
         ViewRustBoolFunc isAvailableFunc;
+
+        bool shouldProcessValid;
         ViewRustBoolFunc shouldProcessFunc;
+
+        bool hasViewMenuItemEntryValid;
         ViewRustBoolFunc hasViewMenuItemEntryFunc;
     };
 
@@ -34,19 +46,34 @@ namespace hex::rust {
 
         }
         ~ViewRustWrapper() override {
-            this->m_funcs.destructorFunc();
+            if (this->m_funcs.destructorValid)
+                this->m_funcs.destructorFunc();
+            else {
+                // View::~View(); Already called by destructor anyways
+            }
         }
 
         void drawContent() override {
-            this->m_funcs.drawContentFunc(this->getWindowOpenState());
+            if (this->m_funcs.drawContentValid)
+                this->m_funcs.drawContentFunc(this->getWindowOpenState());
+            else {
+                hex::log::fatal("Rust View 'void drawContent()' was not implemented!");
+                std::abort();
+            }
         }
 
         void drawAlwaysVisible() override {
-            this->m_funcs.drawAlwaysVisibleFunc();
+            if (this->m_funcs.drawAlwaysVisibleValid)
+                this->m_funcs.drawAlwaysVisibleFunc();
+            else
+                View::drawAlwaysVisible();
         }
 
         void drawMenu() override {
-            this->m_funcs.drawMenuFunc();
+            if (this->m_funcs.drawMenuValid)
+                this->m_funcs.drawMenuFunc();
+            else
+                View::drawMenu();
         }
 
         bool handleShortcut(bool keys[512], bool ctrl, bool shift, bool alt) override {
@@ -54,15 +81,24 @@ namespace hex::rust {
         }
 
         bool isAvailable() override {
-            return this->m_funcs.isAvailableFunc();
+            if (this->m_funcs.isAvailableValid)
+                return this->m_funcs.isAvailableFunc();
+            else
+                return View::isAvailable();
         }
 
         bool shouldProcess() override {
-            return this->m_funcs.shouldProcessFunc();
+            if (this->m_funcs.shouldProcessValid)
+                return this->m_funcs.shouldProcessFunc();
+            else
+                return View::shouldProcess();
         }
 
         bool hasViewMenuItemEntry() override {
-            return this->m_funcs.hasViewMenuItemEntryFunc();
+            if (this->m_funcs.hasViewMenuItemEntryValid)
+                return this->m_funcs.hasViewMenuItemEntryFunc();
+            else
+                return View::hasViewMenuItemEntry();
         }
 
         ImVec2 getMinSize() override {

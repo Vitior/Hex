@@ -9,7 +9,6 @@ use std::ffi::CStr;
 use std::os::raw::{c_char, c_void};
 use std::ptr;
 use std::str;
-use std::thread;
 
 pub use self::clipboard::*;
 pub use self::color::ImColor32;

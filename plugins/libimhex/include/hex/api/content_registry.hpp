@@ -11,21 +11,12 @@
 #include <vector>
 
 #include <nlohmann/json_fwd.hpp>
-#include <cxx.h>
 
 class ImVec2;
 
 namespace hex {
 
     class View;
-
-    namespace rust {
-        using ViewRustSimpleFunc = ::rust::Fn<void()>;
-        using ViewRustBoolFunc = ::rust::Fn<bool()>;
-        using ViewRustContentDrawFunc = ::rust::Fn<void(bool&)>;
-        using ViewRustShortcutFunc = ::rust::Fn<bool(bool[512], bool, bool, bool)>;
-        using ViewRustVecFunc = ::rust::Fn<ImVec2()>;
-    }
 
     class LanguageDefinition;
     namespace pl { class Evaluator; }
@@ -117,15 +108,6 @@ namespace hex {
             void add(Args&& ... args) {
                 return add(new T(std::forward<Args>(args)...));
             }
-
-            View* createRustView(const std::string &unlocalizedName,
-                                 rust::ViewRustSimpleFunc destructorFunc,
-                                 rust::ViewRustContentDrawFunc drawContentFunc,
-                                 rust::ViewRustSimpleFunc drawAlwaysVisibleFunc,
-                                 rust::ViewRustSimpleFunc drawMenuFunc,
-                                 rust::ViewRustBoolFunc isAvailableFunc,
-                                 rust::ViewRustBoolFunc shouldProcessFunc,
-                                 rust::ViewRustBoolFunc hasViewMenuItemEntryFunc);
 
             std::vector<View*>& getEntries();
 

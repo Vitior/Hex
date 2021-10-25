@@ -2,6 +2,7 @@
 
 mod imhex_api;
 mod content_registry;
+mod rust_utils;
 
 pub use macros::plugin_setup;
 pub use imhex_api::ImHexApi;
@@ -10,4 +11,5 @@ pub use imhex_api::Color;
 pub use imgui;
 
 pub use content_registry::ContentRegistry;
-pub use content_registry::ffi::ContentRegistry::Views::View;
+
+pub use rust_utils::ViewBuilder;
