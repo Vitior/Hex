@@ -1,9 +1,9 @@
 pub mod ffi {
 
-    pub mod ImHexApi {
+    pub mod imhex_api {
 
         #[cxx::bridge]
-        pub mod Common {
+        pub mod common {
 
             #[namespace = "hex::ImHexApi::Common"]
             extern "C++" {
@@ -16,7 +16,7 @@ pub mod ffi {
         }
 
         #[cxx::bridge]
-        pub mod Bookmarks {
+        pub mod bookmarks {
 
             #[namespace = "hex::ImHexApi::Bookmarks"]
             extern "C++" {
@@ -43,15 +43,12 @@ pub struct Color {
 }
 
 impl Region {
-
     pub fn new(address : u64, size : usize) -> Self {
         Region { address, size }
     }
-
 }
 
 impl Color {
-
     pub fn new(r : u8, g : u8, b : u8, a : u8) -> Self {
         Color { a, g, b, r }
     }
@@ -61,36 +58,36 @@ impl Color {
     }
 }
 
-pub mod ImHexApi {
+pub mod imhex_api {
 
-    pub mod Common {
+    pub mod common {
 
-        pub fn closeImHex() {
+        pub fn close_imhex() {
 
             unsafe {
-                crate::imhex_api::ffi::ImHexApi::Common::closeImHex(false);
+                crate::imhex_api_ffi::ffi::imhex_api::common::closeImHex(false);
             }
 
         }
 
-        pub fn restartImmHex() {
+        pub fn restart_imhex() {
 
             unsafe {
-                crate::imhex_api::ffi::ImHexApi::Common::restartImHex();
+                crate::imhex_api_ffi::ffi::imhex_api::common::restartImHex();
             }
 
         }
 
     }
 
-    pub mod Bookmarks {
+    pub mod bookmarks {
 
         pub fn add(region : crate::Region, name : &str, comment : &str, color : Option<crate::Color>) {
             cxx::let_cxx_string!(cpp_name = name);
             cxx::let_cxx_string!(cpp_comment = comment);
 
             unsafe {
-                crate::imhex_api::ffi::ImHexApi::Bookmarks::add(region.address, region.size, &cpp_name, &cpp_comment, color.unwrap_or(crate::Color::new(0, 0, 0, 0)).rgba());
+                crate::imhex_api_ffi::ffi::imhex_api::bookmarks::add(region.address, region.size, &cpp_name, &cpp_comment, color.unwrap_or(crate::Color::new(0, 0, 0, 0)).rgba());
             }
         }
 

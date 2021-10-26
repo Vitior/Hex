@@ -1,15 +1,13 @@
-#![allow(non_snake_case)]
-
-mod imhex_api;
-mod content_registry;
-mod rust_utils;
+mod imhex_api_ffi;
+mod content_registry_ffi;
+mod rust_utils_ffi;
 
 pub use macros::plugin_setup;
-pub use imhex_api::ImHexApi;
-pub use imhex_api::Region;
-pub use imhex_api::Color;
+pub use imhex_api_ffi::imhex_api;
+pub use imhex_api_ffi::Region;
+pub use imhex_api_ffi::Color;
 pub use imgui;
 
-pub use content_registry::ContentRegistry;
+pub use content_registry_ffi::content_registry;
 
-pub use rust_utils::ViewBuilder;
+pub use rust_utils_ffi::ViewBuilder;

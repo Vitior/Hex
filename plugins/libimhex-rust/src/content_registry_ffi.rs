@@ -1,9 +1,9 @@
 pub mod ffi {
 
-    pub mod ContentRegistry {
+    pub mod content_registry {
 
         #[cxx::bridge]
-        pub mod Views {
+        pub mod views {
 
             #[namespace = "hex"]
             pub struct View {
@@ -22,11 +22,11 @@ pub mod ffi {
     }
 }
 
-pub mod ContentRegistry {
-    pub mod Views {
-        pub fn add(view: * mut crate::rust_utils::ffi::RustUtils::View) {
+pub mod content_registry {
+    pub mod views {
+        pub fn add(view: * mut crate::rust_utils_ffi::ffi::rust_utils::View) {
             unsafe {
-                crate::content_registry::ffi::ContentRegistry::Views::add(view as *mut _);
+                crate::content_registry_ffi::ffi::content_registry::views::add(view as *mut _);
             }
         }
     }

@@ -5,7 +5,7 @@ use hex::imgui::Window;
 #[hex::plugin_setup("Example Rust", "WerWolv", "Example Rust plugin used as template for plugin devs")]
 fn init() {
     let view = hex::ViewBuilder::new("Rust View")
-        .drawContent(|open: &mut bool| {
+        .draw_content(|open: &mut bool| {
             let mut ctx = hex::imgui::Context::current().unwrap();
             let ui = ctx.current_ui();
 
@@ -22,6 +22,6 @@ fn init() {
                 });
         }).build();
 
-    hex::ContentRegistry::Views::add(view);
+    hex::content_registry::views::add(view);
 }
 
